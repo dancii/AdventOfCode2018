@@ -26,7 +26,7 @@ fun partOne(input: List<String>) {
         }
     }
 
-    println(twice * trice)    
+    println(twice * trice)
 }
 
 fun partTwo(input: List<String>) {
@@ -38,7 +38,7 @@ fun partTwo(input: List<String>) {
                 continue
             }
             missplacedCount = 0
-            
+
             for ((index, boxIdOneChar) in boxIdOne.withIndex()) {
                 if (boxIdOneChar != boxIdTwo[index]) {
                     missplacedCount += 1
@@ -48,12 +48,12 @@ fun partTwo(input: List<String>) {
                     break
                 }
             }
-            
+
             if (missplacedCount == 1) {
                 println("BoxIdOne: "+boxIdOne+" BoxIdTwo: "+boxIdTwo+" Correct word: "+boxIdOne.removeRange(missplacedPos, missplacedPos))
                 break@outter
             }
         }
     }
-    
+
 }
