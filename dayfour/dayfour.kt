@@ -7,12 +7,9 @@ fun main(args: Array<String>) {
     val guards: ArrayList<Guard> = ArrayList<Guard>()
 
     val sortedInput = input.sortedBy { it }
-    // sortedInput.map { it ->
-    //     println(it)
-    // }
     var latestGuardId = 0
     var timeAsleep = 0
-    var timeAwake = 0
+
     sortedInput.map { it ->
         val date = it.substring(1, 17)
         val text = it.substring(18)
@@ -22,39 +19,58 @@ fun main(args: Array<String>) {
         } else if (text.contains("falls")) {
             timeAsleep = date.substring(14, 16).toInt()
         } else if (text.contains("wakes")) {
-            timeAwake = date.substring(14, 16).toInt()
-            var guard = Guard()
-            var guardExists = false
-            for (tempGuard in guards) {
-                if (tempGuard.guardId == latestGuardId) {
-                    guard = tempGuard
-                    guardExists = true
-                }
-            }
+
+            var timeAwake = date.substring(14, 16).toInt()
+            var existingGuard = guards.find { guard -> guard.guardId == latestGuardId }
+
+            var guard = if (existingGuard != null) existingGuard else Guard()
+
             guard.guardId = latestGuardId
             guard.totalSleepTime+=(timeAwake-timeAsleep)
+
             for (i in timeAsleep..(timeAwake-1)) {
                 guard.sleepTimeLine[i]++
             }
-            if (!guardExists) {
+
+            if (existingGuard == null) {
                 guards.add(guard)
             }
-
-            /* println("Guard id: ${guard.guardId}")
-            println("Asleep: $timeAsleep")
-            println("Awake: $timeAwake")
-            println("Guard sleep time: ${guard.totalSleepTime}")
-            println("Guard sleep time: ${Arrays.toString(guard.sleepTimeLine)}")*/
         } 
     }
+    
+    println("Answer part one: ${partOne(guards)}")
+    println("Answer part two: ${partTwo(guards)}")
+}
 
+fun partOne(guards: ArrayList<Guard>): Int? {
     val guardWithMostSleepTime: Guard? = guards.maxBy { it.totalSleepTime }
     val guardIdWithMostSleepTime: Int? = guardWithMostSleepTime?.guardId
 
-    val minuteTheGuardSpentMostTimeAsleep: Int? = guardWithMostSleepTime?.sleepTimeLine?.maxBy { it }
+    val minuteTheGuardSpentMostTimeAsleep = guardWithMostSleepTime?.let {
+        guardWithMostSleepTime.sleepTimeLine.indexOf(guardWithMostSleepTime.sleepTimeLine.max()!!)
+    }
 
-    val answer = guardIdWithMostSleepTime?.times(minuteTheGuardSpentMostTimeAsleep!!)
-    println(answer)
+    val answer = minuteTheGuardSpentMostTimeAsleep?.let {
+        guardIdWithMostSleepTime?.times(minuteTheGuardSpentMostTimeAsleep)
+    }
+
+    return answer
+}
+
+fun partTwo(guards: ArrayList<Guard>): Int? {
+    var maxMinuteValue = 0
+    var guard: Guard? = null
+    guards.map { it ->
+        val maxMinute = it.sleepTimeLine.max()!!
+        if (maxMinute > maxMinuteValue) {
+            maxMinuteValue = maxMinute
+            guard = it
+        }
+    }
+    var answer = guard?.let { it ->
+        it.guardId.times(it.sleepTimeLine.indexOf(maxMinuteValue))
+    }
+    return answer
 }
 
 class Guard {
