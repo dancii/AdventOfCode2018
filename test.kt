@@ -1,8 +1,10 @@
 fun main(args: Array<String>) {
 
-    for (i in 0..(10-1)) {
-        println(i)
-    }
+    var wat = "123456789"
 
-    48398
+    for (i in 0..wat.length-1) {
+        wat = wat.removeRange(2, 3)
+        break
+    }
+    println(wat)
 }
