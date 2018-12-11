@@ -13,7 +13,12 @@ fun main(args: Array<String>) {
         xCoords.add(tempCoord[0].toInt())
         yCoords.add(tempCoord[1].toInt())
     }
+    //partOne(coords, xCoords, yCoords)
+    partTwo(coords, xCoords, yCoords)
+    
+}
 
+fun partOne(coords: ArrayList<Coord>, xCoords: ArrayList<Int>, yCoords: ArrayList<Int>) {
     val xMin: Int = 0
     val xMax: Int = xCoords.max()!!+1
     val yMin: Int = 0
@@ -61,7 +66,36 @@ fun main(args: Array<String>) {
     }
 
     println("Key: $keyLargestArea, Largest area: $largestArea")
-    
+}
+
+
+fun partTwo (coords: ArrayList<Coord>, xCoords: ArrayList<Int>, yCoords: ArrayList<Int>) {
+    var region = ArrayList<Int>()
+    val xMin: Int = 0
+    val xMax: Int = xCoords.max()!!+1
+    val yMin: Int = 0
+    val yMax: Int = yCoords.max()!!+1
+
+    var regionSize = 0
+
+    for (x in xMin..xMax-1) {
+        for (y in yMin..yMax-1) {
+            inner@ for (coord in coords) {
+                val manDistance = Math.abs(coord.x - x) + Math.abs(coord.y-y)
+                region.add(manDistance)
+                if (region.sum() >= 10000) {
+                    break@inner
+                }
+            }
+            if (region.sum() < 10000) {
+                regionSize++
+            }
+            region.clear()
+        }
+    }
+
+    println(regionSize)
+
 }
 
 class Coord constructor(var key: Int, var x: Int, var y: Int)
